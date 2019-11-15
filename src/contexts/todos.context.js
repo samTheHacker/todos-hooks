@@ -1,6 +1,7 @@
 //todos
-//al methods to interact /w todos
-import React, { createContext, useReducer } from "react";
+//all methods to interact /w todos
+import React, { createContext } from "react";
+import { UseLocalStorageReducer } from "../hooks/useLocalStorageReducer";
 import todoReducer from "../reducers/todo.reducer";
 // import useTodoState from "../hooks/useTodoState";
 import uuid from "uuid/v4";
@@ -11,12 +12,19 @@ const defaultTodos = [
 ];
 
 export const TodosContext = createContext();
+export const DispatchContext = createContext();
 
 export function TodosProvider(props) {
-  const [todos, dispatch] = useReducer(todoReducer, defaultTodos);
+  const [todos, dispatch] = UseLocalStorageReducer(
+    "todos",
+    defaultTodos,
+    todoReducer
+  );
   return (
-    <TodosContext.Provider value={{ todos, dispatch }}>
-      {props.children}
+    <TodosContext.Provider value={todos}>
+      <DispatchContext.Provider value={dispatch}>
+        {props.children}
+      </DispatchContext.Provider>
     </TodosContext.Provider>
   );
 }
